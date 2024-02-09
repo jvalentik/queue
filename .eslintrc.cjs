@@ -9,6 +9,10 @@ module.exports = {
       files: ['*ts'],
       rules: {
         '@typescript-eslint/ban-ts-comment': 'off',
+        'import/order': 'off',
+        'import/no-relative-packages': 'off',
+        'no-param-reassign': 'off',
+        '@typescript-eslint/no-explicit-any': 'off'
       },
     },
     {
@@ -17,8 +21,7 @@ module.exports = {
         mocha: true
       },
       rules: {
-        '@typescript-eslint/no-unused-expressions': 'off',
-        'import/no-relative-packages': 'off'
+        '@typescript-eslint/no-unused-expressions': 'off'
       }
     }
   ]

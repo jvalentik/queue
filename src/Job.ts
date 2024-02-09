@@ -1,19 +1,20 @@
 import date from 'date.js';
 import debug from 'debug';
-import { ObjectId } from 'mongodb';
 import { ChildProcess, fork } from 'child_process';
+import { computeFromInterval, computeFromRepeatAt } from './utils/nextRunAt.js';
+import { datefields, IJobParameters, TJobDatefield } from './types/JobParameters.js';
+import { JobPriority, parsePriority } from './utils/priority.js';
+import { ObjectId } from 'mongodb';
+
 import type { Agenda } from './index.js';
 import type { DefinitionProcessor } from './types/JobDefinition.js';
-import { IJobParameters, datefields, TJobDatefield } from './types/JobParameters.js';
-import { JobPriority, parsePriority } from './utils/priority.js';
-import { computeFromInterval, computeFromRepeatAt } from './utils/nextRunAt.js';
 
 const log = debug('agenda:job');
 
 /**
  * @class
  */
-export class Job<DATA = unknown | void> {
+export class Job<DATA = any> {
 	readonly attrs: IJobParameters<DATA>;
 
 	/** this flag is set to true, if a job got canceled (e.g. due to a timeout or other exception),
@@ -32,7 +33,7 @@ export class Job<DATA = unknown | void> {
 
 	cancel(error?: Error | string) {
 		this.agenda.emit(`cancel:${this.attrs.name}`, this);
-		this.canceled = error || true;
+		this.canceled = error ?? true;
 		if (this.forkedChild) {
 			try {
 				this.forkedChild.send({
@@ -350,9 +351,9 @@ export class Job<DATA = unknown | void> {
 			} else {
 				this.attrs.nextRunAt = null;
 			}
-		} catch (error: any) {
+		} catch (error) {
 			this.attrs.nextRunAt = null;
-			this.fail(error);
+			this.fail(error as Error | string);
 		}
 
 		return this;
@@ -385,8 +386,8 @@ export class Job<DATA = unknown | void> {
 						forkHelper.path,
 						[
 							this.attrs.name,
-							this.attrs._id!.toString(),
-							this.agenda.definitions[this.attrs.name].filePath || ''
+							this.attrs._id?.toString() ?? '',
+							this.agenda.definitions[this.attrs.name].filePath ?? ''
 						],
 						forkHelper.options
 					);

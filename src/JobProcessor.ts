@@ -1,11 +1,19 @@
 import debug from 'debug';
-import { createRequire } from 'node:module';
-import type { IAgendaJobStatus, IAgendaStatus } from './types/AgendaStatus.js';
-import type { IJobDefinition } from './types/JobDefinition.js';
-import type { Agenda, JobWithId } from './index.js';
-import type { IJobParameters } from './types/JobParameters.js';
 import { Job } from './Job.js';
 import { JobProcessingQueue } from './JobProcessingQueue.js';
+import { createRequire } from 'node:module';
+
+
+import type {
+  Agenda,
+  JobWithId,
+} from './index.js';
+import type {
+  IAgendaJobStatus,
+  IAgendaStatus,
+} from './types/AgendaStatus.js';
+import type { IJobDefinition } from './types/JobDefinition.js';
+import type { IJobParameters } from './types/JobParameters.js';
 
 const log = debug('agenda:jobProcessor');
 
@@ -13,7 +21,7 @@ const log = debug('agenda:jobProcessor');
 const require = createRequire(import.meta.url);
 const { version: agendaVersion } = require('../package.json');
 
-const MAX_SAFE_32BIT_INTEGER = 2 ** 31; // Math.pow(2,31);
+const MAX_SAFE_32BIT_INTEGER = 2 ** 31;
 
 /**
  * @class

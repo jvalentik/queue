@@ -1,10 +1,10 @@
-/* eslint-disable import/first */
-import { DateTime } from 'luxon';
+import cronParser from 'cron-parser';
 import date from 'date.js';
 import debug from 'debug';
-import cronParser from 'cron-parser';
 import humanInterval from 'human-interval';
+import { DateTime } from 'luxon';
 import { isValidDate } from './isValidDate.js';
+
 import type { IJobParameters } from '../types/JobParameters.js';
 
 const { parseExpression } = cronParser;
@@ -23,10 +23,10 @@ export function isValidHumanInterval(value: unknown): value is string {
  * Internal method that computes the interval
  */
 export const computeFromInterval = (attrs: IJobParameters<any>): Date => {
-	const previousNextRunAt = attrs.nextRunAt || new Date();
+	const previousNextRunAt = attrs.nextRunAt ?? new Date();
 	log('[%s:%s] computing next run via interval [%s]', attrs.name, attrs._id, attrs.repeatInterval);
 
-	const lastRun = dateForTimezone(attrs.lastRunAt || new Date(), attrs.repeatTimezone);
+	const lastRun = dateForTimezone(attrs.lastRunAt ?? new Date(), attrs.repeatTimezone);
 
 	const cronOptions = {
 		currentDate: lastRun.toJSDate(),
@@ -88,7 +88,7 @@ export const computeFromInterval = (attrs: IJobParameters<any>): Date => {
  * @returns {undefined}
  */
 export function computeFromRepeatAt(attrs: IJobParameters<any>): Date {
-	const lastRun = attrs.lastRunAt || new Date();
+	const lastRun = attrs.lastRunAt ?? new Date();
 	const nextDate = date(attrs.repeatAt).valueOf();
 
 	// If you do not specify offset date for below test it will fail for ms
@@ -96,8 +96,7 @@ export function computeFromRepeatAt(attrs: IJobParameters<any>): Date {
 
 	if (offset === date(attrs.repeatAt, offset).valueOf()) {
 		log('[%s:%s] failed to calculate repeatAt due to invalid format', attrs.name, attrs._id);
-		// this.attrs.nextRunAt = undefined;
-		// this.fail('failed to calculate repeatAt time due to invalid format');
+
 		throw new Error('failed to calculate repeatAt time due to invalid format');
 	}
 

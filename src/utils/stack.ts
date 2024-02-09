@@ -1,3 +1,4 @@
+
 export function getCallerFilePath(position = 2): string | undefined {
 	if (position >= Error.stackTraceLimit) {
 		throw new TypeError(

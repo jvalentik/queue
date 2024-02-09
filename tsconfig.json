@@ -5,8 +5,7 @@
 		"module": "nodenext",
 		"moduleDetection": "force",
 		"target": "es2022",
-
-		// other best practice configs
+    "lib": ["ES2022"],
 		"moduleResolution": "nodenext",
 		"strict": true,
 		"noImplicitAny": false,

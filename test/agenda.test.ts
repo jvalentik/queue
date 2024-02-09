@@ -1,13 +1,15 @@
-/* eslint-disable no-console,no-unused-expressions,@typescript-eslint/no-unused-expressions */
-
+import { expect } from 'chai';
 import delay from 'delay';
 import { Db } from 'mongodb';
-import { expect } from 'chai';
+
+import { Agenda } from '../src/index';
+import { Job } from '../src/Job.js';
+import { hasMongoProtocol } from '../src/utils/hasMongoProtocol.js';
 import { mockMongo } from './helpers/mock-mongodb.js';
 
-import { Agenda } from '../src/index.js';
-import { hasMongoProtocol } from '../src/utils/hasMongoProtocol.js';
-import { Job } from '../src/Job.js';
+/* eslint-disable no-console,no-unused-expressions,@typescript-eslint/no-unused-expressions */
+
+
 
 // agenda instances
 let globalAgenda: Agenda;
@@ -25,10 +27,10 @@ const clearJobs = async (): Promise<void> => {
 // Slow timeouts for Travis
 const jobTimeout = 500;
 const jobType = 'do work';
-const jobProcessor = () => {};
+const jobProcessor = () => { /* TODO document why this arrow function is empty */ };
 
-describe('Agenda', () => {
-	beforeEach(async () => {
+describe('Agenda', function() {
+	beforeEach(async function() {
 		if (!mongoDb) {
 			const mockedMongo = await mockMongo();
 			mongoCfg = mockedMongo.uri;
@@ -53,7 +55,7 @@ describe('Agenda', () => {
 		});
 	});
 
-	afterEach(async () => {
+	afterEach(async function() {
 		await delay(50);
 		if (globalAgenda) {
 			await globalAgenda.stop();
@@ -63,187 +65,187 @@ describe('Agenda', () => {
 		// await jobs._db.close();
 	});
 
-	it('sets a default processEvery', () => {
+	it('sets a default processEvery', function() {
 		expect(globalAgenda.attrs.processEvery).to.equal(5000);
 	});
 
-	describe('configuration methods', () => {
-		it('sets the _db directly when passed as an option', () => {
+	describe('configuration methods', function() {
+		it('sets the _db directly when passed as an option', function() {
 			const agendaDb = new Agenda({ mongo: mongoDb });
 			expect(agendaDb.db).to.not.equal(undefined);
 		});
 	});
 
-	describe('configuration methods', () => {
-		describe('mongo connection tester', () => {
-			it('passing a valid server connection string', () => {
+	describe('configuration methods', function() {
+		describe('mongo connection tester', function() {
+			it('passing a valid server connection string', function() {
 				expect(hasMongoProtocol(mongoCfg)).to.equal(true);
 			});
 
-			it('passing a valid multiple server connection string', () => {
+			it('passing a valid multiple server connection string', function() {
 				expect(hasMongoProtocol(`mongodb+srv://localhost/agenda-test`)).to.equal(true);
 			});
 
-			it('passing an invalid connection string', () => {
+			it('passing an invalid connection string', function() {
 				expect(hasMongoProtocol(`localhost/agenda-test`)).to.equal(false);
 			});
 		});
-		describe('mongo', () => {
-			it('sets the _db directly', () => {
+		describe('mongo', function() {
+			it('sets the _db directly', function() {
 				const agenda = new Agenda();
 				agenda.mongo(mongoDb);
 				expect(agenda.db).to.not.equal(undefined);
 			});
 
-			it('returns itself', async () => {
+			it('returns itself', async function() {
 				const agenda = new Agenda();
 				expect(await agenda.mongo(mongoDb)).to.equal(agenda);
 			});
 		});
 
-		describe('name', () => {
-			it('sets the agenda name', () => {
+		describe('name', function() {
+			it('sets the agenda name', function() {
 				globalAgenda.name('test queue');
 				expect(globalAgenda.attrs.name).to.equal('test queue');
 			});
-			it('returns itself', () => {
+			it('returns itself', function() {
 				expect(globalAgenda.name('test queue')).to.equal(globalAgenda);
 			});
 		});
-		describe('processEvery', () => {
-			it('sets the processEvery time', () => {
+		describe('processEvery', function() {
+			it('sets the processEvery time', function() {
 				globalAgenda.processEvery('3 minutes');
 				expect(globalAgenda.attrs.processEvery).to.equal(180000);
 			});
-			it('returns itself', () => {
+			it('returns itself', function() {
 				expect(globalAgenda.processEvery('3 minutes')).to.equal(globalAgenda);
 			});
 		});
-		describe('maxConcurrency', () => {
-			it('sets the maxConcurrency', () => {
+		describe('maxConcurrency', function() {
+			it('sets the maxConcurrency', function() {
 				globalAgenda.maxConcurrency(10);
 				expect(globalAgenda.attrs.maxConcurrency).to.equal(10);
 			});
-			it('returns itself', () => {
+			it('returns itself', function() {
 				expect(globalAgenda.maxConcurrency(10)).to.equal(globalAgenda);
 			});
 		});
-		describe('defaultConcurrency', () => {
-			it('sets the defaultConcurrency', () => {
+		describe('defaultConcurrency', function() {
+			it('sets the defaultConcurrency', function() {
 				globalAgenda.defaultConcurrency(1);
 				expect(globalAgenda.attrs.defaultConcurrency).to.equal(1);
 			});
-			it('returns itself', () => {
+			it('returns itself', function() {
 				expect(globalAgenda.defaultConcurrency(5)).to.equal(globalAgenda);
 			});
 		});
-		describe('lockLimit', () => {
-			it('sets the lockLimit', () => {
+		describe('lockLimit', function() {
+			it('sets the lockLimit', function() {
 				globalAgenda.lockLimit(10);
 				expect(globalAgenda.attrs.lockLimit).to.equal(10);
 			});
-			it('returns itself', () => {
+			it('returns itself', function() {
 				expect(globalAgenda.lockLimit(10)).to.equal(globalAgenda);
 			});
 		});
-		describe('defaultLockLimit', () => {
-			it('sets the defaultLockLimit', () => {
+		describe('defaultLockLimit', function() {
+			it('sets the defaultLockLimit', function() {
 				globalAgenda.defaultLockLimit(1);
 				expect(globalAgenda.attrs.defaultLockLimit).to.equal(1);
 			});
-			it('returns itself', () => {
+			it('returns itself', function() {
 				expect(globalAgenda.defaultLockLimit(5)).to.equal(globalAgenda);
 			});
 		});
-		describe('defaultLockLifetime', () => {
-			it('returns itself', () => {
+		describe('defaultLockLifetime', function() {
+			it('returns itself', function() {
 				expect(globalAgenda.defaultLockLifetime(1000)).to.equal(globalAgenda);
 			});
-			it('sets the default lock lifetime', () => {
+			it('sets the default lock lifetime', function() {
 				globalAgenda.defaultLockLifetime(9999);
 				expect(globalAgenda.attrs.defaultLockLifetime).to.equal(9999);
 			});
-			it('is inherited by jobs', () => {
+			it('is inherited by jobs', function() {
 				globalAgenda.defaultLockLifetime(7777);
 				globalAgenda.define('testDefaultLockLifetime', () => {});
 				expect(globalAgenda.definitions.testDefaultLockLifetime.lockLifetime).to.equal(7777);
 			});
 		});
-		describe('sort', () => {
-			it('returns itself', () => {
+		describe('sort', function() {
+			it('returns itself', function() {
 				expect(globalAgenda.sort({ nextRunAt: 1, priority: -1 })).to.equal(globalAgenda);
 			});
-			it('sets the default sort option', () => {
+			it('sets the default sort option', function() {
 				globalAgenda.sort({ nextRunAt: -1 });
 				expect(globalAgenda.attrs.sort).to.eql({ nextRunAt: -1 });
 			});
 		});
 	});
 
-	describe('job methods', () => {
-		describe('create', () => {
+	describe('job methods', function() {
+		describe('create', function() {
 			let job;
-			beforeEach(() => {
+			beforeEach(function() {
 				job = globalAgenda.create('sendEmail', { to: 'some guy' });
 			});
 
-			it('returns a job', () => {
+			it('returns a job', function() {
 				expect(job).to.to.be.an.instanceof(Job);
 			});
-			it('sets the name', () => {
+			it('sets the name', function() {
 				expect(job.attrs.name).to.equal('sendEmail');
 			});
-			it('sets the type', () => {
+			it('sets the type', function() {
 				expect(job.attrs.type).to.equal('normal');
 			});
-			it('sets the agenda', () => {
+			it('sets the agenda', function() {
 				expect(job.agenda).to.equal(globalAgenda);
 			});
-			it('sets the data', () => {
+			it('sets the data', function() {
 				expect(job.attrs.data).to.have.property('to', 'some guy');
 			});
 		});
 
-		describe('define', () => {
-			it('stores the definition for the job', () => {
+		describe('define', function() {
+			it('stores the definition for the job', function() {
 				expect(globalAgenda.definitions.someJob).to.have.property('fn', jobProcessor);
 			});
 
-			it('sets the default concurrency for the job', () => {
+			it('sets the default concurrency for the job', function() {
 				expect(globalAgenda.definitions.someJob).to.have.property('concurrency', 5);
 			});
 
-			it('sets the default lockLimit for the job', () => {
+			it('sets the default lockLimit for the job', function() {
 				expect(globalAgenda.definitions.someJob).to.have.property('lockLimit', 0);
 			});
 
-			it('sets the default priority for the job', () => {
+			it('sets the default priority for the job', function() {
 				expect(globalAgenda.definitions.someJob).to.have.property('priority', 0);
 			});
-			it('takes concurrency option for the job', () => {
+			it('takes concurrency option for the job', function() {
 				globalAgenda.define('highPriority', jobProcessor, { priority: 10 });
 				expect(globalAgenda.definitions.highPriority).to.have.property('priority', 10);
 			});
 		});
 
-		describe('every', () => {
-			describe('with a job name specified', () => {
-				it('returns a job', async () => {
+		describe('every', function() {
+			describe('with a job name specified', function() {
+				it('returns a job', async function() {
 					expect(await globalAgenda.every('5 minutes', 'send email')).to.be.an.instanceof(Job);
 				});
-				it('sets the repeatEvery', async () => {
+				it('sets the repeatEvery', async function() {
 					expect(
 						await globalAgenda
 							.every('5 seconds', 'send email')
 							.then(({ attrs }) => attrs.repeatInterval)
 					).to.equal('5 seconds');
 				});
-				it('sets the agenda', async () => {
+				it('sets the agenda', async function() {
 					expect(
 						await globalAgenda.every('5 seconds', 'send email').then(({ agenda }) => agenda)
 					).to.equal(globalAgenda);
 				});
-				it('should update a job that was previously scheduled with `every`', async () => {
+				it('should update a job that was previously scheduled with `every`', async function() {
 					await globalAgenda.every(10, 'shouldBeSingleJob');
 					await delay(10);
 					await globalAgenda.every(20, 'shouldBeSingleJob');
@@ -254,7 +256,7 @@ describe('Agenda', () => {
 					const res = await globalAgenda.jobs({ name: 'shouldBeSingleJob' });
 					expect(res).to.have.length(1);
 				});
-				it('should not run immediately if options.skipImmediate is true', async () => {
+				it('should not run immediately if options.skipImmediate is true', async function() {
 					const jobName = 'send email';
 					await globalAgenda.every('5 minutes', jobName, {}, { skipImmediate: true });
 					const job = (await globalAgenda.jobs({ name: jobName }))[0];
@@ -262,7 +264,7 @@ describe('Agenda', () => {
 					const now = new Date().getTime();
 					expect(nextRunAt - now > 0).to.equal(true);
 				});
-				it('should run immediately if options.skipImmediate is false', async () => {
+				it('should run immediately if options.skipImmediate is false', async function() {
 					const jobName = 'send email';
 					await globalAgenda.every('5 minutes', jobName, {}, { skipImmediate: false });
 					const job = (await globalAgenda.jobs({ name: jobName }))[0];
@@ -271,8 +273,8 @@ describe('Agenda', () => {
 					expect(nextRunAt - now <= 0).to.equal(true);
 				});
 			});
-			describe('with array of names specified', () => {
-				it('returns array of jobs', async () => {
+			describe('with array of names specified', function() {
+				it('returns array of jobs', async function() {
 					expect(await globalAgenda.every('5 minutes', ['send email', 'some job'])).to.be.an(
 						'array'
 					);
@@ -280,21 +282,21 @@ describe('Agenda', () => {
 			});
 		});
 
-		describe('schedule', () => {
-			describe('with a job name specified', () => {
-				it('returns a job', async () => {
+		describe('schedule', function() {
+			describe('with a job name specified', function() {
+				it('returns a job', async function() {
 					expect(await globalAgenda.schedule('in 5 minutes', 'send email')).to.be.an.instanceof(
 						Job
 					);
 				});
-				it('sets the schedule', async () => {
+				it('sets the schedule', async function() {
 					const fiveish = new Date().valueOf() + 250000;
 					const scheduledJob = await globalAgenda.schedule('in 5 minutes', 'send email');
 					expect(scheduledJob.attrs.nextRunAt!.valueOf()).to.be.greaterThan(fiveish);
 				});
 			});
-			describe('with array of names specified', () => {
-				it('returns array of jobs', async () => {
+			describe('with array of names specified', function() {
+				it('returns array of jobs', async function() {
 					expect(await globalAgenda.schedule('5 minutes', ['send email', 'some job'])).to.be.an(
 						'array'
 					);
@@ -302,9 +304,9 @@ describe('Agenda', () => {
 			});
 		});
 
-		describe('unique', () => {
-			describe('should demonstrate unique contraint', () => {
-				it('should modify one job when unique matches', async () => {
+		describe('unique', function() {
+			describe('should demonstrate unique contraint', function() {
+				it('should modify one job when unique matches', async function() {
 					const job1 = await globalAgenda
 						.create('unique job', {
 							type: 'active',
@@ -337,7 +339,7 @@ describe('Agenda', () => {
 						job2.attrs.nextRunAt!.toISOString()
 					);
 
-					let jobs = await mongoDb
+					const jobs = await mongoDb
 						.collection('agendaJobs')
 						.find({
 							name: 'unique job'
@@ -346,7 +348,7 @@ describe('Agenda', () => {
 					expect(jobs).to.have.length(1);
 				});
 
-				it('should not modify job when unique matches and insertOnly is set to true', async () => {
+				it('should not modify job when unique matches and insertOnly is set to true', async function() {
 					const job1 = await globalAgenda
 						.create('unique job', {
 							type: 'active',
@@ -385,7 +387,7 @@ describe('Agenda', () => {
 
 					expect(job1.attrs.nextRunAt!.toISOString()).to.equal(job2.attrs.nextRunAt!.toISOString());
 
-					let jobs = await mongoDb
+					const jobs = await mongoDb
 						.collection('agendaJobs')
 						.find({
 							name: 'unique job'
@@ -395,8 +397,8 @@ describe('Agenda', () => {
 				});
 			});
 
-			describe('should demonstrate non-unique contraint', () => {
-				it("should create two jobs when unique doesn't match", async () => {
+			describe('should demonstrate non-unique contraint', function() {
+				it("should create two jobs when unique doesn't match", async function() {
 					const time = new Date(Date.now() + 1000 * 60 * 3);
 					const time2 = new Date(Date.now() + 1000 * 60 * 4);
 
@@ -428,7 +430,7 @@ describe('Agenda', () => {
 						.schedule(time)
 						.save();
 
-					let jobs = await mongoDb
+					const jobs = await mongoDb
 						.collection('agendaJobs')
 						.find({
 							name: 'unique job'
@@ -440,18 +442,18 @@ describe('Agenda', () => {
 			});
 		});
 
-		describe('now', () => {
-			it('returns a job', async () => {
+		describe('now', function() {
+			it('returns a job', async function() {
 				expect(await globalAgenda.now('send email')).to.to.be.an.instanceof(Job);
 			});
-			it('sets the schedule', async () => {
+			it('sets the schedule', async function() {
 				const now = new Date();
 				expect(
 					await globalAgenda.now('send email').then(({ attrs }) => attrs.nextRunAt!.valueOf())
 				).to.greaterThan(now.valueOf() - 1);
 			});
 
-			it('runs the job immediately', async () => {
+			it('runs the job immediately', async function() {
 				globalAgenda.define('immediateJob', async job => {
 					expect(await job.isRunning()).to.be.equal(true);
 					await globalAgenda.stop();
@@ -461,8 +463,8 @@ describe('Agenda', () => {
 			});
 		});
 
-		describe('jobs', () => {
-			it('returns jobs', async () => {
+		describe('jobs', function() {
+			it('returns jobs', async function() {
 				await globalAgenda.create('test').save();
 				const c = await globalAgenda.jobs({});
 
@@ -472,8 +474,8 @@ describe('Agenda', () => {
 			});
 		});
 
-		describe('purge', () => {
-			it('removes all jobs without definitions', async () => {
+		describe('purge', function() {
+			it('removes all jobs without definitions', async function() {
 				const job = globalAgenda.create('no definition');
 				await globalAgenda.stop();
 				await job.save();
@@ -491,8 +493,8 @@ describe('Agenda', () => {
 			});
 		});
 
-		describe('saveJob', () => {
-			it('persists job to the database', async () => {
+		describe('saveJob', function() {
+			it('persists job to the database', async function() {
 				const job = globalAgenda.create('someJob', {});
 				await job.save();
 
@@ -503,8 +505,8 @@ describe('Agenda', () => {
 		});
 	});
 
-	describe('cancel', () => {
-		beforeEach(async () => {
+	describe('cancel', function() {
+		beforeEach(async function() {
 			let remaining = 3;
 			const checkDone = () => {
 				remaining -= 1;
@@ -516,11 +518,11 @@ describe('Agenda', () => {
 			expect(remaining).to.equal(0);
 		});
 
-		afterEach(async () => {
+		afterEach(async function() {
 			await globalAgenda.db.removeJobs({ name: { $in: ['jobA', 'jobB'] } });
 		});
 
-		it('should cancel a job', async () => {
+		it('should cancel a job', async function() {
 			const j = await globalAgenda.jobs({ name: 'jobA' });
 			expect(j).to.have.length(2);
 
@@ -530,7 +532,7 @@ describe('Agenda', () => {
 			expect(job).to.have.length(0);
 		});
 
-		it('should cancel multiple jobs', async () => {
+		it('should cancel multiple jobs', async function() {
 			const jobs1 = await globalAgenda.jobs({ name: { $in: ['jobA', 'jobB'] } });
 			expect(jobs1).to.have.length(3);
 			await globalAgenda.cancel({ name: { $in: ['jobA', 'jobB'] } });
@@ -539,7 +541,7 @@ describe('Agenda', () => {
 			expect(jobs2).to.have.length(0);
 		});
 
-		it('should cancel jobs only if the data matches', async () => {
+		it('should cancel jobs only if the data matches', async function() {
 			const jobs1 = await globalAgenda.jobs({ name: 'jobA', data: 'someData' });
 			expect(jobs1).to.have.length(1);
 			await globalAgenda.cancel({ name: 'jobA', data: 'someData' });
@@ -552,28 +554,28 @@ describe('Agenda', () => {
 		});
 	});
 
-	describe('search', () => {
-		beforeEach(async () => {
+	describe('search', function() {
+		beforeEach(async function() {
 			await globalAgenda.create('jobA', 1).save();
 			await globalAgenda.create('jobA', 2).save();
 			await globalAgenda.create('jobA', 3).save();
 		});
 
-		afterEach(async () => {
+		afterEach(async function() {
 			await globalAgenda.db.removeJobs({ name: 'jobA' });
 		});
 
-		it('should limit jobs', async () => {
+		it('should limit jobs', async function() {
 			const results = await globalAgenda.jobs({ name: 'jobA' }, {}, 2);
 			expect(results).to.have.length(2);
 		});
 
-		it('should skip jobs', async () => {
+		it('should skip jobs', async function() {
 			const results = await globalAgenda.jobs({ name: 'jobA' }, {}, 2, 2);
 			expect(results).to.have.length(1);
 		});
 
-		it('should sort jobs', async () => {
+		it('should sort jobs', async function() {
 			const results = await globalAgenda.jobs({ name: 'jobA' }, { data: -1 });
 
 			expect(results).to.have.length(3);
@@ -588,8 +590,8 @@ describe('Agenda', () => {
 		});
 	});
 
-	describe('ensureIndex findAndLockNextJobIndex', () => {
-		it('ensureIndex-Option false does not create index findAndLockNextJobIndex', async () => {
+	describe('ensureIndex findAndLockNextJobIndex', function() {
+		it('ensureIndex-Option false does not create index findAndLockNextJobIndex', async function() {
 			const agenda = new Agenda({
 				mongo: mongoDb,
 				ensureIndex: false
@@ -603,7 +605,7 @@ describe('Agenda', () => {
 			expect(listIndex.cursor.firstBatch[0].name).to.be.equal('_id_');
 		});
 
-		it('ensureIndex-Option true does create index findAndLockNextJobIndex', async () => {
+		it('ensureIndex-Option true does create index findAndLockNextJobIndex', async function() {
 			const agenda = new Agenda({
 				mongo: mongoDb,
 				ensureIndex: true
@@ -618,7 +620,7 @@ describe('Agenda', () => {
 			expect(listIndex.cursor.firstBatch[1].name).to.be.equal('findAndLockNextJobIndex');
 		});
 
-		it('creating two agenda-instances with ensureIndex-Option true does not throw an error', async () => {
+		it('creating two agenda-instances with ensureIndex-Option true does not throw an error', async function() {
 			const agenda = new Agenda({
 				mongo: mongoDb,
 				ensureIndex: true
@@ -637,9 +639,9 @@ describe('Agenda', () => {
 		});
 	});
 
-	describe('process jobs', () => {
+	describe('process jobs', function() {
 		// eslint-disable-line prefer-arrow-callback
-		it('do not run failed jobs again', async () => {
+		it('do not run failed jobs again', async function() {
 			const unhandledRejections: any[] = [];
 			const rejectionsHandler = error => unhandledRejections.push(error);
 			process.on('unhandledRejection', rejectionsHandler);
@@ -677,7 +679,7 @@ describe('Agenda', () => {
 		}).timeout(10000);
 
 		// eslint-disable-line prefer-arrow-callback
-		it('ensure there is no unhandledPromise on job timeouts', async () => {
+		it('ensure there is no unhandledPromise on job timeouts', async function() {
 			const unhandledRejections: any[] = [];
 			const rejectionsHandler = error => unhandledRejections.push(error);
 			process.on('unhandledRejection', rejectionsHandler);
@@ -713,7 +715,7 @@ describe('Agenda', () => {
 			expect(unhandledRejections).to.have.length(0);
 		}).timeout(10000);
 
-		it('should not cause unhandledRejection', async () => {
+		it('should not cause unhandledRejection', async function() {
 			// This unit tests if for this bug [https://github.com/agenda/agenda/issues/884]
 			// which is not reproducible with default agenda config on shorter processEvery.
 			// Thus we set the test timeout to 10000, and the delay below to 6000.

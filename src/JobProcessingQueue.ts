@@ -1,7 +1,10 @@
-// eslint-disable-next-line prettier/prettier
-import type {Job, JobWithId} from './Job.js';
-import type { IJobParameters } from './types/JobParameters.js';
 import type { Agenda } from './index.js';
+import type {
+	Job,
+	JobWithId
+} from './Job.js';
+import type { IJobParameters } from './types/JobParameters.js';
+
 /**
  * @class
  */

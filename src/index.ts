@@ -1,20 +1,35 @@
-import { EventEmitter } from 'events';
 import debug from 'debug';
-
-import type { Db, Filter, MongoClientOptions, Sort } from 'mongodb';
-import { SortDirection } from 'mongodb';
-import { ForkOptions } from 'child_process';
-import type { IJobDefinition } from './types/JobDefinition.js';
-import type { IAgendaConfig } from './types/AgendaConfig.js';
-import type { IDatabaseOptions, IDbConfig, IMongoOptions } from './types/DbOptions.js';
-import type { IAgendaStatus } from './types/AgendaStatus.js';
-import type { IJobParameters } from './types/JobParameters.js';
-import { Job, JobWithId } from './Job.js';
-import { JobDbRepository } from './JobDbRepository.js';
-import { JobPriority, parsePriority } from './utils/priority.js';
-import { JobProcessor } from './JobProcessor.js';
 import { calculateProcessEvery } from './utils/processEvery.js';
+import { EventEmitter } from 'events';
+import { ForkOptions } from 'child_process';
 import { getCallerFilePath } from './utils/stack.js';
+import { JobDbRepository } from './JobDbRepository.js';
+import { JobProcessor } from './JobProcessor.js';
+import { SortDirection } from 'mongodb';
+import type {
+  Db,
+  Filter,
+  MongoClientOptions,
+  Sort,
+} from 'mongodb';
+
+import {
+  Job,
+  JobWithId,
+} from './Job.js';
+import type { IAgendaConfig } from './types/AgendaConfig.js';
+import type { IAgendaStatus } from './types/AgendaStatus.js';
+import type {
+  IDatabaseOptions,
+  IDbConfig,
+  IMongoOptions,
+} from './types/DbOptions.js';
+import type { IJobDefinition } from './types/JobDefinition.js';
+import type { IJobParameters } from './types/JobParameters.js';
+import {
+  JobPriority,
+  parsePriority,
+} from './utils/priority.js';
 
 const log = debug('agenda');
 
@@ -172,7 +187,7 @@ export class Agenda extends EventEmitter {
 	 * Default is { nextRunAt: 1, priority: -1 }
 	 * @param query
 	 */
-	sort(query: { [key: string]: SortDirection }): Agenda {
+	sort(query: { [key: string]: SortDirection }): this {
 		log('Agenda.sort([Object])');
 		this.attrs.sort = query;
 		return this;

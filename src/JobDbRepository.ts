@@ -1,19 +1,27 @@
 import debug from 'debug';
 import {
-	Collection,
-	Db,
-	Filter,
-	MongoClient,
-	MongoClientOptions,
-	ObjectId,
-	Sort,
-	UpdateFilter
-} from 'mongodb';
-import type { Job, JobWithId } from './Job.js';
-import type { Agenda } from './index.js';
-import type { IDatabaseOptions, IDbConfig, IMongoOptions } from './types/DbOptions.js';
-import type { IJobParameters } from './types/JobParameters.js';
+  Collection,
+  Db,
+  Filter,
+  MongoClient,
+  MongoClientOptions,
+  ObjectId,
+  Sort,
+  UpdateFilter
+  } from 'mongodb';
 import { hasMongoProtocol } from './utils/hasMongoProtocol.js';
+
+import type { Agenda } from './index.js';
+import type {
+	Job,
+	JobWithId
+} from './Job.js';
+import type {
+	IDatabaseOptions,
+	IDbConfig,
+	IMongoOptions
+} from './types/DbOptions.js';
+import type { IJobParameters } from './types/JobParameters.js';
 
 const log = debug('agenda:db');
 
@@ -27,7 +35,7 @@ export class JobDbRepository {
 		private agenda: Agenda,
 		private connectOptions: (IDatabaseOptions | IMongoOptions) & IDbConfig
 	) {
-		this.connectOptions.sort = this.connectOptions.sort || { nextRunAt: 1, priority: -1 };
+		this.connectOptions.sort = this.connectOptions.sort ?? { nextRunAt: 1, priority: -1 };
 	}
 
 	private async createConnection(): Promise<Db> {
@@ -169,7 +177,7 @@ export class JobDbRepository {
 		const db = await this.createConnection();
 		log('successful connection to MongoDB', db.options);
 
-		const collection = this.connectOptions.db?.collection || 'agendaJobs';
+		const collection = this.connectOptions.db?.collection ?? 'agendaJobs';
 
 		this.collection = db.collection(collection);
 		if (log.enabled) {
@@ -220,7 +228,7 @@ export class JobDbRepository {
 		return client.db();
 	}
 
-	private processDbResult<DATA = unknown | void>(
+	private processDbResult<DATA =  any>(
 		job: Job<DATA>,
 		res?: IJobParameters<DATA>
 	): Job<DATA> {
@@ -232,6 +240,7 @@ export class JobDbRepository {
 		if (res) {
 			// Grab ID and nextRunAt from MongoDB and store it as an attribute on Job
 			job.attrs._id = res._id;
+			// eslint-disable-next-line no-param-reassign
 			job.attrs.nextRunAt = res.nextRunAt;
 
 			// check if we should process the job immediately
@@ -278,7 +287,7 @@ export class JobDbRepository {
 	 * @param {Job} job job to save into MongoDB
 	 * @returns {Promise} resolves when job is saved or errors
 	 */
-	async saveJob<DATA = unknown | void>(job: Job<DATA>): Promise<Job<DATA>> {
+	async saveJob<DATA = unknown>(job: Job<DATA>): Promise<Job<DATA>> {
 		try {
 			log('attempting to save a job');
 

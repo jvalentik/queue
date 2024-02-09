@@ -1,6 +1,7 @@
 import { Filter, ObjectId } from 'mongodb';
 
-export interface IJobParameters<DATA = unknown | void> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface IJobParameters<DATA = any> {
 	_id?: ObjectId;
 
 	name: string;
