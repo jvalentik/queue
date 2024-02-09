@@ -1,6 +1,6 @@
 {
-  "name": "@whisthub/agenda",
-  "version": "0.1.0",
+  "name": "@mwp/agenda",
+  "version": "0.1.1",
   "type": "module",
   "description": "Light weight job scheduler for Node.js",
   "exports": "./dist/index.js",
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/whisthub/agenda"
+    "url": "git://github.com/jvalentik/agenda"
   },
   "keywords": [
     "job",
@@ -46,11 +46,8 @@
     "scheduler",
     "runner"
   ],
-  "author": "Sebastiaan Marynissen <info@whisthub.com>",
+  "author": "jvalentik",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/whisthub/agenda/issues"
-  },
   "dependencies": {
     "cron-parser": "^4.9.0",
     "date.js": "~0.3.3",
