@@ -1,6 +1,6 @@
 {
   "name": "@whisthub/agenda",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "description": "Light weight job scheduler for Node.js",
   "exports": "./dist/index.js",
@@ -52,37 +52,37 @@
     "url": "https://github.com/whisthub/agenda/issues"
   },
   "dependencies": {
-    "cron-parser": "^4",
+    "cron-parser": "^4.9.0",
     "date.js": "~0.3.3",
-    "debug": "~4",
-    "human-interval": "~2",
-    "luxon": "^3"
+    "debug": "~4.3.4",
+    "human-interval": "~2.0.1",
+    "luxon": "^3.4.4"
   },
   "peerDependencies": {
-    "mongodb": ">=4"
+    "mongodb": ">=6.3.0"
   },
   "devDependencies": {
-    "@hokify/eslint-config": "^2.3.8",
+    "@hokify/eslint-config": "^2.9.3",
     "@istanbuljs/nyc-config-typescript": "^1.0.2",
-    "@types/chai": "^4.3.4",
-    "@types/debug": "^4.1.7",
-    "@types/human-interval": "^1.0.0",
-    "@types/luxon": "^3.1.0",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.11.12",
-    "@types/sinon": "^10.0.13",
-    "chai": "^4.3.7",
+    "@types/chai": "^4.3.11",
+    "@types/debug": "^4.1.12",
+    "@types/human-interval": "^1.0.2",
+    "@types/luxon": "^3.4.2",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.17",
+    "@types/sinon": "^17.0.3",
+    "chai": "^5.0.3",
     "delay": "^6.0.0",
-    "eslint": "^8.29.0",
-    "mocha": "10.1.0",
+    "eslint": "^8.56.0",
+    "mocha": "10.3.0",
     "mongodb": "^6.3.0",
     "mongodb-memory-server": "^9.1.6",
     "nyc": "^15.1.0",
-    "prettier": "^2.8.1",
-    "sinon": "15.0.0",
+    "prettier": "^2.8.8",
+    "sinon": "17.0.1",
     "standard-version": "^9.5.0",
     "tsx": "^4.7.0",
-    "typedoc": "^0.23.21",
-    "typescript": "^4.9.4"
+    "typedoc": "^0.25.7",
+    "typescript": "^5.3.3"
   }
 }
